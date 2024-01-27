@@ -33,6 +33,9 @@ class Product(models.Model):
     date_creation=models.DateField(auto_now_add=True)
     last_change=models.DateField(auto_now=True)
 
+    is_sale=models.BooleanField(default=False)
+    sale_price=models.DecimalField(default=0, decimal_places=2, max_digits=6)
+
     def __str__(self):
         return self.name
 
