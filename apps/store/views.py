@@ -2,7 +2,31 @@ from django.shortcuts import render, redirect
 from .models import Product
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from .forms import SignUpForm
 # Create your views here.
+
+def register_user(request):
+    form = SignUpForm()
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        
+        if form.is_valid():
+            form.save()
+            username=form.cleaned_data['username']
+            password=form.cleaned_data['password1']
+
+            user=authenticate(username=username, password=password)
+
+            login(request, user)
+
+            messages.success(request, (f'Bienvenido, {username}!!!'))
+            return redirect('home')
+        else:
+            messages.error(request, ('Ha ocurrido un error en el registro...'))
+            return redirect('register')
+    else:
+        form = SignUpForm()
+        return render(request, 'store/register.html', {'form':form})
 
 def home(request):
     products=Product.objects.all()
@@ -27,7 +51,8 @@ def login_user(request):
             messages.success(request, ('Has accedido exitosamente!!!'))
             return redirect('home')
         else:
-            messages.success(request, 'Ha ocurrido un inconveniente. Por favor, vuelva a intentar.')
+            
+            messages.error(request, 'Ha ocurrido un inconveniente. Por favor, vuelva a intentar.')
             return redirect('login')
     else:
         return render(request, 'store/login.html', {})
@@ -35,5 +60,5 @@ def login_user(request):
 def logout_user(request):
 
     logout(request)
-    messages.success(request, ('Ha salido de su cuenta.'))
+    messages.info(request, ('Ha salido de su cuenta.'))
     return redirect('home')
