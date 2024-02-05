@@ -1,9 +1,28 @@
 from django.shortcuts import render, redirect
-from .models import Product
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm
+from django.shortcuts import get_object_or_404, get_list_or_404
+from .models import Product,Category
 # Create your views here.
+
+def get_category(request, foo):
+    foo = foo.replace('-', ' ')
+    try:
+        category=Category.objects.get(name=foo)
+        
+        products=Product.objects.filter(category=category)
+        return render(request, 'store/category.html', {'products':products,'category':category})
+    except:
+        messages.error(request, 'That category does not exist.')
+        return redirect('home')
+
+    
+
+def get_product(request, pk):
+    product=get_object_or_404(Product,pk=pk)
+
+    return render(request, 'store/product.html', {'product':product})
 
 def register_user(request):
     if request.method == 'POST':
