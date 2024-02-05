@@ -6,27 +6,23 @@ from .forms import SignUpForm
 # Create your views here.
 
 def register_user(request):
-    form = SignUpForm()
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        
         if form.is_valid():
             form.save()
             username=form.cleaned_data['username']
             password=form.cleaned_data['password1']
 
             user=authenticate(username=username, password=password)
-
+            
             login(request, user)
 
             messages.success(request, (f'Bienvenido, {username}!!!'))
             return redirect('home')
-        else:
-            messages.error(request, ('Ha ocurrido un error en el registro...'))
-            return redirect('register')
     else:
         form = SignUpForm()
-        return render(request, 'store/register.html', {'form':form})
+        
+    return render(request, 'store/register.html', {'form':form})
 
 def home(request):
     products=Product.objects.all()

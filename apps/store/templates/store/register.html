@@ -4,16 +4,134 @@
 {% include 'navbar.html' %}
 
 {% block content %}
-<div class="row">
+<!-- Header-->
+<header class="bg-dark py-5">
+   <div class="container px-4 px-lg-5 my-5">
+       <div class="text-center text-white">
+           <h1 class="display-4 fw-bolder">Registrate</h1>
+           <p class="lead fw-normal text-white-50 mb-0">Forma parte de esta comunidad</p>
+       </div>
+   </div>
+</header>
+
+
+<br><br>
+<div class="container ">
+   <form class="row g-3" method="POST" action="{% url 'register' %}" novalidate>
+      {% csrf_token %}
+
+      <div class="col-md-12">
+        <label for="validationUsername" class="form-label">{{form.username.label}}</label>
+        <div class="input-group ">
+         <span class=" input-group-text material-symbols-outlined">
+            person
+          </span>
+              
+          {{form.username}}
+            
+          
+            
+        </div>
+        {% if form.username.errors %}
+            {{form.username.errors}}
+        {% endif %}
+        
+        
+      </div>
+      <div class="col-md-12">
+        <label for="validationEmail" class="form-label">{{form.email.label}}</label>
+        <div class="input-group has-validation">
+         <span class=" input-group-text material-symbols-outlined">
+            mail
+            </span>
+            {{form.email}}
+
+         <div class="invalid-feedback">
+            Por favor, escribe un correo electronico.
+         </div>
+        </div>
+        {% if form.email.errors %}
+          {{form.email.errors}}
+        {% endif %}
+        
+      </div>
+      
+      <div class="col-md-12">
+        <label for="validationPassword1" class="form-label">{{form.password1.label}}</label>
+        <div class="input-group has-validation">
+         <span class=" input-group-text material-symbols-outlined">
+            lock
+            </span>
+
+
+            {{form.password1}}
+            <div class="invalid-feedback">
+               Contraseña invalida
+            </div>
+        </div>
+        
+      </div>
+      <div class="col-md-12">
+         <label for="validationPassword2" class="form-label">{{form.password2.label}}</label>
+        <div class="input-group has-validation">
+         <span class=" input-group-text material-symbols-outlined">
+            lock
+            </span>
+            {{form.password2}}
+            <div class="invalid-feedback">
+               Contraseña invalida
+            </div>
+        </div>
+        {% if form.password2.errors %}
+          {{form.password2.errors}}
+        {% endif %}
+         
+         
+       </div>
+      <div class="col-12 text-center">
+        <button class="btn btn-primary" type="submit">Registrarse</button>
+      </div>
+    </form>
+
+</div>
+<br><br>
+
+<!-- <div class="row">
     <center>
         <div class="col-8">
-            <form method="POST" action="{% url 'register' %}">
+            <form method="POST" action="{% url 'register' %}"  class="needs-validation" novalidate>
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Registrarse</button>
+                    {% for error in form.username.errors %}
+                    <h1>eror</h1>
+                      <h2> {{error}}</h2> 
+                    {% endfor %}
+                    {{form.as_p}}
+                    <button class="btn btn-primary" type="submit">Registrarse</button>
             </form>
         </div>
     </center>
-</div>
+</div> -->
+
+  
+  <script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+  </script>
     
 {% endblock %}
