@@ -1,0 +1,41 @@
+{% extends 'store/base.html' %}
+
+{% load static %}
+
+
+
+{% block content %}
+    <!-- Header-->
+    <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Your Cart</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Something products to show</p>
+            </div>
+        </div>
+    </header>
+
+    {% if cart_products %}
+    <br><br>
+    <div class="row justify-content-md-center">
+        <div class="card mb-3" style="max-width: 540px;">
+            <ol class="list-group list-group-numbered">
+                {% for pro in cart_products %} 
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                      <div class="fw-bold">{{pro.name}}</div>
+                      Price: ${{pro.price}}
+                    </div>
+                    <span class="badge bg-primary rounded-pill">1</span>
+                  </li>
+                {% endfor %}    
+              </ol>
+        </div>
+        
+    </div>
+    
+    {% else %}
+        There's no products to show
+    {% endif %}
+    <br><br><br><br><br>
+{% endblock %}
