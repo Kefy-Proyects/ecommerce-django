@@ -32,6 +32,7 @@ class Product(models.Model):
     image=models.ImageField(upload_to='uploads/product/')
     date_creation=models.DateField(auto_now_add=True)
     last_change=models.DateField(auto_now=True)
+    in_stock=models.IntegerField(default=0)
 
     is_sale=models.BooleanField(default=False)
     sale_price=models.DecimalField(default=0, decimal_places=2, max_digits=6)

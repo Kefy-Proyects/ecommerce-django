@@ -14,28 +14,70 @@
             </div>
         </div>
     </header>
-
+    
     {% if cart_products %}
     <br><br>
-    <div class="row justify-content-md-center">
-        <div class="card mb-3" style="max-width: 540px;">
-            <ol class="list-group list-group-numbered">
-                {% for pro in cart_products %} 
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                      <div class="fw-bold">{{pro.name}}</div>
-                      Price: ${{pro.price}}
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            {% for pro in cart_products %} 
+
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{pro.image.url}}" class="img-fluid rounded-start" alt="...">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{pro.name}}</h5>
+                      <br>
+                      <div class="card-text">
+                        {%for key,value in quantities.items %}
+                            {% if key == pro.id|slugify %}
+                                <input id="number{{pro.id}}" type="number" min="1" max="{{pro.in_stock}}" value="{{value}}"/>
+                            {%endif%}
+                        {%endfor%}
+                      </div>
+                      <br>
+                      <button data-index='{{pro.id}}'class="btn btn-primary update-button">Update</button>
+                      <br><br>
+                      <p class="card-text"><small class="text-body-secondary">On stock: {{pro.in_stock}}</small></p>
                     </div>
-                    <span class="badge bg-primary rounded-pill">1</span>
-                  </li>
-                {% endfor %}    
-              </ol>
-        </div>
+                  </div>
+                </div>
+              </div>
         
+              {% endfor %}  
+        </div>
     </div>
+    
     
     {% else %}
         There's no products to show
     {% endif %}
     <br><br><br><br><br>
+    <script>
+ $(document).on('click', '.update-button', function(e){
+    e.preventDefault();
+    let producid = $(this).data('index')
+    $.ajax({
+      type: 'POST',
+      url: `{% url 'cart_update' %}`,
+      data:{
+        product_id: producid,
+        product_qty: $('#number'+producid).val(),
+        csrfmiddlewaretoken: '{{csrf_token}}',
+        action: 'post'
+      },
+      success:function(json){
+        location.reload()
+        // window.location.href = "{% url 'home' %}"
+      },
+      error:function(xhr, errmsg, err){
+
+      }
+    })
+  })
+
+    </script>
+
 {% endblock %}

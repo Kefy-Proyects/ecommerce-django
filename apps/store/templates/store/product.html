@@ -14,10 +14,10 @@
               <h5 class="card-title">{{product.name}}</h5>
               <p class="card-text">{{product.description}}</p>
               <p class="card-text"><small class="text-body-secondary">{{product.last_change}}</small></p>
-              <p class="card-text">{{product.id}}</p>
+              <input type="number" min="1" max="{{product.in_stock}}" value="1" id="qty-cart"/>
 
             <a href="{% url 'home' %}" class="btn btn-primary">Home</a>
-            <button id="add-cart" type="button" value="{{product.id}}" class="btn btn-primary">Add Product</button>
+            <button id="add-cart" type="button" value="{{product.id}}"  class="btn btn-primary">Add Product</button>
     
             </div>
           </div>
@@ -33,11 +33,13 @@
       url: `{% url 'cart_add' %}`,
       data:{
         product_id: $('#add-cart').val(),
+        product_qty: $('#qty-cart').val(),
         csrfmiddlewaretoken: '{{csrf_token}}',
         action: 'post'
       },
       success:function(json){
         document.getElementById('cart_quantity').textContent = json.qty
+        window.location.href = "{% url 'home' %}"
       },
       error:function(xhr, errmsg, err){
 
