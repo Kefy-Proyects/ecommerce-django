@@ -9,7 +9,8 @@ def cart_summary(request):
     cart=Cart(request)
     cart_products=cart.get_products()
     quantities=cart.get_quantities()
-    return render(request, 'cart/cart_summary.html', {'cart_products':cart_products,'quantities':quantities})
+    total=cart.get_total()
+    return render(request, 'cart/cart_summary.html', {'cart_products':cart_products,'quantities':quantities, 'total':total})
 
 
 def cart_add(request):
@@ -32,7 +33,18 @@ def cart_add(request):
         return response
 
 def cart_delete(request):
-    pass
+    cart = Cart(request)
+
+    if request.POST.get('action')== 'post':
+        product_id = int(request.POST.get('product_id')) 
+
+        cart.delete(product=product_id)
+
+        response=JsonResponse({'id_deleted':product_id})
+
+        return response
+
+        return redirect('cart_summary')
 
 def cart_update(request):
     cart = Cart(request)

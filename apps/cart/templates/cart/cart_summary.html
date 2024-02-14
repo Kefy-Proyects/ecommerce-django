@@ -39,14 +39,29 @@
                       </div>
                       <br>
                       <button data-index='{{pro.id}}'class="btn btn-primary update-button">Update</button>
+                      <button data-index='{{pro.id}}'class="btn btn-danger delete-button">Delete</button>
+
                       <br><br>
-                      <p class="card-text"><small class="text-body-secondary">On stock: {{pro.in_stock}}</small></p>
+                    {% if pro.is_sale %}
+                      <strike>
+                        ${{pro.price}}
+                      </strike>
+                        &nbsp${{pro.sale_price}}
+                    {% else %}
+                       &nbsp${{pro.price}}
+                    {% endif %}
+
+                      
+                    <p class="card-text"><small class="text-body-secondary">On stock: {{pro.in_stock}}</small></p>
+
                     </div>
                   </div>
                 </div>
               </div>
         
-              {% endfor %}  
+              {% endfor %}
+              
+              <h3>Total: {{total}}</h3>
         </div>
     </div>
     
@@ -56,7 +71,29 @@
     {% endif %}
     <br><br><br><br><br>
     <script>
- $(document).on('click', '.update-button', function(e){
+      // Delete button
+      $(document).on('click', '.delete-button', function(e){
+    e.preventDefault();
+    let producid = $(this).data('index')
+    $.ajax({
+      type: 'POST',
+      url: `{% url 'cart_delete' %}`,
+      data:{
+        product_id: producid,
+        csrfmiddlewaretoken: '{{csrf_token}}',
+        action: 'post'
+      },
+      success:function(json){
+        location.reload()
+        // window.location.href = "{% url 'home' %}"
+      },
+      error:function(xhr, errmsg, err){
+
+      }
+    })
+  })
+// Update button
+  $(document).on('click', '.update-button', function(e){
     e.preventDefault();
     let producid = $(this).data('index')
     $.ajax({
