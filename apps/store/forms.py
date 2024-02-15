@@ -1,8 +1,28 @@
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
 from django.core.exceptions import ValidationError
+
+class UserUpdateForm(UserChangeForm):
+
+    password=None
+
+    email=forms.EmailField(label='Correo Electronico', widget=forms.TextInput(attrs={'class':'form-control','id':'validationEmail', 'placeholder':'Direccion de correo'}))
+
+    class Meta:
+        model=User
+        fields=('username','email')
+    
+    def __init__(self, *args, **kwargs):
+        super(UserUpdateForm, self).__init__(*args, **kwargs)
+
+        self.fields['username'].widget.attrs['class']='form-control'
+        self.fields['username'].widget.attrs['placeholder']='Nombre de usuario'
+        self.fields['username'].label='Usuario'
+        self.fields['username'].help_text=''
+
+
 
 class SignUpForm(UserCreationForm):
     email=forms.EmailField(label='Correo Electronico', widget=forms.TextInput(attrs={'class':'form-control','id':'validationEmail', 'placeholder':'Direccion de correo'}))

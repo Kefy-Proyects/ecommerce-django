@@ -1,10 +1,38 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import SignUpForm
+from django.contrib.auth.models import User
+from .forms import SignUpForm, UserUpdateForm
 from django.shortcuts import get_object_or_404, get_list_or_404
 from .models import Product,Category
 # Create your views here.
+
+def profile(request):
+    if request.user.is_authenticated:
+        return render(request, 'store/profile.html',{})
+    else:
+        messages.warning('You most be loged!!')
+        return redirect('home')
+
+def update_profile(request):
+    if request.user.is_authenticated:
+        current_user=User.objects.get(id=request.user.id)
+        user_form=UserUpdateForm(request.POST or None, instance=current_user)
+        if user_form.is_valid():
+            user_form.save()
+            login(request, current_user)
+            messages.success(request, 'User has been updated!!!')
+            return render('home')
+        else:
+            print('su')
+            messages.error(request, 'Something goes wrong')
+            return render(request, 'store/update_profile.html', {'user_form':user_form})
+    else:
+        messages.warning('You must be logged in!!')
+        return redirect('home')
+
+def change_password(request):
+    pass
 
 def get_category(request, foo):
     foo = foo.replace('-', ' ')
