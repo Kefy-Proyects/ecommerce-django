@@ -1,8 +1,38 @@
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django import forms
 
 from django.core.exceptions import ValidationError
+
+class UserUpdatePasswordForm(PasswordChangeForm):
+    class Meta:
+        model=User
+        fields=('old_password', 'new_password1', 'new_password2')
+
+    def __init__(self, *args, **kwargs):
+        super(UserUpdatePasswordForm, self).__init__(*args, **kwargs)
+
+        self.fields['old_password'].widget.attrs['class']='form-control'
+        self.fields['old_password'].widget.attrs['placeholder']='Old Password'
+        self.fields['old_password'].widget.attrs['id']='oldPassword'
+        self.fields['old_password'].widget.attrs['required']=''
+        self.fields['old_password'].label='Old Password'
+        self.fields['old_password'].help_text=''
+
+        self.fields['new_password1'].widget.attrs['class']='form-control'
+        self.fields['new_password1'].widget.attrs['placeholder']='New Password'
+        self.fields['new_password1'].widget.attrs['id']='validationPassword1'
+        self.fields['new_password1'].widget.attrs['required']=''
+        self.fields['new_password1'].label='New Password'
+        self.fields['new_password1'].help_text=''
+
+        self.fields['new_password2'].widget.attrs['class']='form-control'
+        self.fields['new_password2'].widget.attrs['placeholder']='Repeat Password'
+        self.fields['new_password2'].widget.attrs['id']='validationPassword2'
+        self.fields['new_password2'].widget.attrs['required']=''
+        self.fields['new_password2'].label='Repeat Password'
+        self.fields['new_password2'].help_text=''
+
 
 class UserUpdateForm(UserChangeForm):
 
@@ -12,14 +42,23 @@ class UserUpdateForm(UserChangeForm):
 
     class Meta:
         model=User
-        fields=('username','email')
+        fields=('username','first_name', 'last_name', 'email')
     
     def __init__(self, *args, **kwargs):
         super(UserUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs['class']='form-control'
+        self.fields['first_name'].widget.attrs['placeholder']='First Name'
+        self.fields['first_name'].label='First Name'
+        self.fields['first_name'].help_text=''
+
+        self.fields['last_name'].widget.attrs['class']='form-control'
+        self.fields['last_name'].widget.attrs['placeholder']='Last Name'
+        self.fields['last_name'].label='Last Name'
+        self.fields['last_name'].help_text=''
 
         self.fields['username'].widget.attrs['class']='form-control'
-        self.fields['username'].widget.attrs['placeholder']='Nombre de usuario'
-        self.fields['username'].label='Usuario'
+        self.fields['username'].widget.attrs['placeholder']='Username'
+        self.fields['username'].label='Username'
         self.fields['username'].help_text=''
 
 
@@ -84,11 +123,11 @@ class SignUpForm(UserCreationForm):
         super(SignUpForm, self).__init__(*args, **kwargs)
 
         self.fields['username'].widget.attrs['class']='form-control'
-        self.fields['username'].widget.attrs['placeholder']='Nombre de usuario'
+        self.fields['username'].widget.attrs['placeholder']='Username'
         self.fields['username'].widget.attrs['id']='validationUsername'
         self.fields['username'].widget.attrs['required']=''
 
-        self.fields['username'].label='Usuario'
+        self.fields['username'].label='Username'
         self.fields['username'].help_text=''
 
         self.fields['password1'].widget.attrs['class']='form-control'
