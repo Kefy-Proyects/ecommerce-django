@@ -8,7 +8,25 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 from django.shortcuts import get_object_or_404, get_list_or_404
 from .models import Product,Category
+
+from django.db.models import Q
 # Create your views here.
+
+def search(request):
+    if 'q' in request.GET:
+        q=request.GET['q']
+        if q=='':
+            return redirect('home')
+        else:
+            multiple_q=Q(Q(name__icontains=q) | Q(description__icontains=q))
+            products = Product.objects.filter(multiple_q)
+            context={
+                'products':products,
+            }
+            return render(request, 'store/search.html', context)
+    else:
+        messages.warning(request, 'There is nothing to show...')
+        
 
 def change_password(request):
     # if request.user.is_authenticated:

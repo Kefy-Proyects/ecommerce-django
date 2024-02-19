@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .cart import Cart
 from ..store.models import Product
 from django.http import JsonResponse
+from django.contrib import messages
+
 
 # Create your views here.
 
@@ -22,8 +24,10 @@ def cart_add(request):
 
 
         product = get_object_or_404(Product, id=product_id)
-        cart.add(product=product, quantities=product_qty)
-
+        if product.in_stock <= 0:
+            messages.warning(request, 'There is no stock of this product.')
+        else:
+            cart.add(product=product, quantities=product_qty)
         cart_quantity = cart.__len__()
 
         #response=JsonResponse({'Product Name: ':product.name})

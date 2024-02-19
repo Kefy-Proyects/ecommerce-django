@@ -12,4 +12,6 @@ urlpatterns = [
     path('category/<str:foo>', views.get_category, name='category'),
     path('update_profile/', views.update_profile, name='update_profile'),
     path('change_password/', views.change_password, name='change_password'),
+    path('search/', views.search, name='search'),
+
 ]
